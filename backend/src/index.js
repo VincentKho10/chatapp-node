@@ -1,7 +1,7 @@
 require('dotenv').configDotenv({ path:'./.env/dev.env' });
 require('dotenv').configDotenv({ path:'./.env/prod.env' });
 
-const loginRoute  = require('./api/landing_page/login');
+const loginRoute  = require('../api/landing_page/login');
 
 var jwt = require('jsonwebtoken');
 var express = require('express');

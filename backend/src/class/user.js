@@ -1,5 +1,6 @@
 class User {
-  constructor(username, password, firstname, lastname, createdAt, updatedAt) {
+  constructor(uid, username, password, firstname, lastname, createdAt, updatedAt) {
+    this.uid = uid;
     this.username = username;
     this.password = password;
     this.firstname = firstname;
@@ -9,7 +10,8 @@ class User {
   }
 
   static fromJson(json) {
-    return User(
+    return new User(
+      json["uid"],
       json["username"],
       json["password"],
       json["firstname"],
@@ -21,6 +23,7 @@ class User {
 
   toJson() {
     return {
+      uid: this.uid,
       username: this.username,
       password: this.password,
       firstname: this.firstname,
@@ -29,4 +32,10 @@ class User {
       updatedAt: this.updatedAt,
     };
   }
+
+  toString() {
+    return this.uid;
+  }
 }
+
+module.exports = User
