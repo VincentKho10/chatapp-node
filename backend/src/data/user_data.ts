@@ -1,12 +1,15 @@
-const {faker} = require('@faker-js/faker')
-const User = require('../class/user')
+import { User } from "../class/user";
 
-class UserData{
+const { faker } = require('@faker-js/faker')
+
+export class UserData{
+    res: Array<any>;
+
     constructor(){
         this.res = []
         for (var i=0;i<=10;i++){
             this.createOne({
-                'uid': i,
+                'uid': i.toString(),
                 'username': faker.internet.username(),
                 'password': faker.internet.password(),
                 'firstname': faker.person.firstName(),
@@ -21,27 +24,26 @@ class UserData{
         return this.res
     }
 
-    getOne(uid){
+    getOne(uid: string){
         const res = this.res.filter(v=>v.uid==uid)
         return res
     }
 
-    createOne(json){
-        this.res.push(User.fromJson(json))
-        return json
+    createOne(json: Record<string,any>): User{
+        const addeduser: User = User.fromJson(json)
+        this.res.push(addeduser)
+        return addeduser
     }
     
-    updateOne(uid, changes){
+    updateOne(uid: string, changes: Record<string,any>){
         const updidx = this.res.findIndex((v)=>v.uid==uid);
         this.res[updidx] = changes;
         return {...this.res[updidx]}
     }
 
-    deleteOne(uid){
+    deleteOne(uid: string){
         const delidx = this.res.findIndex((v)=>v.uid == uid)
         const deltd = this.res.splice(delidx,1);
         return {...deltd[0]}
     }
 }
-
-module.exports = UserData

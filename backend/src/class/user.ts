@@ -1,5 +1,21 @@
-class User {
-  constructor(uid, username, password, firstname, lastname, createdAt, updatedAt) {
+export class User {
+  uid: string;
+  username: string;
+  password: string;
+  firstname: string;
+  lastname: string;
+  createdAt: Number;
+  updatedAt: Number;
+
+  constructor(
+    uid: string,
+    username: string,
+    password: string,
+    firstname: string,
+    lastname: string,
+    createdAt: Number,
+    updatedAt: Number
+  ) {
     this.uid = uid;
     this.username = username;
     this.password = password;
@@ -9,7 +25,7 @@ class User {
     this.updatedAt = updatedAt;
   }
 
-  static fromJson(json) {
+  static fromJson(json: Record<string, any>): User {
     return new User(
       json["uid"],
       json["username"],
@@ -21,7 +37,7 @@ class User {
     );
   }
 
-  toJson() {
+  public toJson(): Record<string, any> {
     return {
       uid: this.uid,
       username: this.username,
@@ -33,9 +49,7 @@ class User {
     };
   }
 
-  toString() {
+  public toString(): string {
     return this.uid;
   }
 }
-
-module.exports = User

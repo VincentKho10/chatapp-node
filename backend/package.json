@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "tsc | jest ./dist",
     "start": "nodemon ./src/index.js"
   },
   "author": "",
@@ -18,5 +18,10 @@
     "nodemon": "^3.1.7",
     "socket.io": "^4.7.5",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/lodash": "^4.17.13",
+    "typescript": "^5.6.3"
   }
 }
