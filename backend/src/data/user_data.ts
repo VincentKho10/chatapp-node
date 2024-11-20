@@ -7,17 +7,6 @@ export class UserData{
 
     constructor(){
         this.res = []
-        for (var i=0;i<=10;i++){
-            this.createOne({
-                'uid': i.toString(),
-                'username': faker.internet.username(),
-                'password': faker.internet.password(),
-                'firstname': faker.person.firstName(),
-                'lastname': faker.person.lastName(),
-                'createdAt': faker.date.recent(),
-                'updatedAt': faker.date.future(),  
-            })
-        }
     }
 
     getAll(){
