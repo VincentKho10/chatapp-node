@@ -1,38 +1,55 @@
+import { Database } from "sqlite3";
 import { User } from "../class/user";
+import { DbConnection } from "./connection";
+import { Function } from "lodash";
 
-const { faker } = require('@faker-js/faker')
+const { faker } = require("@faker-js/faker");
 
-export class UserData{
-    res: Array<any>;
+export class UserData {
+  res: Array<any>;
+  db: DbConnection;
 
-    constructor(){
-        this.res = []
-    }
+  constructor() {
+    this.res = [];
+    this.db = new DbConnection();
+    this.getAll = () => this.postAction(this.getAll);
+    this.getOne = () => this.postAction(this.getOne);
+    this.createOne = () => this.postAction(this.createOne);
+    this.updateOne = () => this.postAction(this.updateOne);
+    this.deleteOne = () => this.postAction(this.deleteOne);
+  }
 
-    getAll(){
-        return this.res
-    }
+  postAction(fn: any): any {
+    fn;
+    this.db.closeConnection();
+  }
 
-    getOne(uid: string){
-        const res = this.res.filter(v=>v.uid==uid)
-        return res
-    }
+  getAll() {
+    const query = this.db.getConnection().prepare("SELECT * FROM users");
+    return query.all();
+  }
 
-    createOne(json: Record<string,any>): User{
-        const addeduser: User = User.fromJson(json)
-        this.res.push(addeduser)
-        return addeduser
-    }
-    
-    updateOne(uid: string, changes: Record<string,any>){
-        const updidx = this.res.findIndex((v)=>v.uid==uid);
-        this.res[updidx] = changes;
-        return {...this.res[updidx]}
-    }
+  getOne(uid: string) {
+    const query = this.db
+      .getConnection()
+      .prepare("SELECT * FROM users WHERE uid = ?");
+    return query.run(uid);
+  }
 
-    deleteOne(uid: string){
-        const delidx = this.res.findIndex((v)=>v.uid == uid)
-        const deltd = this.res.splice(delidx,1);
-        return {...deltd[0]}
-    }
+  createOne(json: Record<string, any>): any {
+    const user: User = User.fromJson(json)
+    const query = this.db.getConnection().prepare("INSERT INTO users (uid,username,password,firstname,lastname,createdAt,updateAt,deletedAt) VALUE(?,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,?)")
+    query.run(user.uid,user.username,user.password,user.firstname,user.lastname,user.deletedAt);
+  }
+
+  updateOne(uid: string, changes: Record<string, any>) {
+    const user: User = User.fromJson(changes)
+    const query = this.db.getConnection().prepare("UPDATE users SET username=?,password=?,firstname=?,lastname=?,updateAt=CURRENT_TIMESTAMP WHERE uid=?")
+    return query.run(user.username,user.password,user.firstname,user.lastname,uid);
+  }
+
+  deleteOne(uid: string) {
+    const query = this.db.getConnection().prepare("UPDATE users SET deletedAt=CURRENT_TIMESTAMP WHERE uid=?")
+    return query.run(uid);
+  }
 }

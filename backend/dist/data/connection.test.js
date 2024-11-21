@@ -13,10 +13,9 @@ const connection_1 = require("./connection");
 const UserDB_1 = require("./UserDB");
 describe("connection test", () => {
     test("db static should not be null", () => __awaiter(void 0, void 0, void 0, function* () {
-        new connection_1.DbConnection();
-        const userdb = new UserDB_1.UserDb(connection_1.DbConnection.dbsqlite);
+        const dbconn = new connection_1.DbConnection();
+        const userdb = new UserDB_1.UserDb(dbconn.dbsqlite);
         yield userdb.initTestUser();
-        const getuser = yield userdb.getUser();
-        console.log(getuser);
+        expect(yield userdb.getUser()).not.toEqual(undefined);
     }));
 });

@@ -2,24 +2,35 @@ import { Database, sqlite3 } from "sqlite3";
 const sqlite3 = require("sqlite3").verbose();
 
 export class DbConnection {
-  static dbsqlite?: Database;
+  private dbsqlite: Database;
 
   constructor() {
-    if (DbConnection.dbsqlite == undefined) {
-      DbConnection.dbsqlite = new sqlite3.Database(
-        "testingdb.db",
-        sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
-        (err: Error) => {
-          console.error(err);
+    this.dbsqlite = new sqlite3.Database(
+      "testingdb.db",
+      sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
+      (err: Error) => {
+        if (err) {
+          console.error(err.message);
         }
-      );
-    }
+      }
+    );
+    this.userTableInit();
+  }
+  
+  userTableInit() {
+    const utablefield = Object.getOwnPropertyNames(
+      Object.getPrototypeOf(User())
+    );
+    this.dbsqlite.prepare(
+      `CREATE TABLE IF NOT EXISTS users(${utablefield.toString()});`
+    );
+  }
+
+  getConnection() {
+    return this.dbsqlite;
   }
 
   closeConnection() {
-    if (DbConnection.dbsqlite){
-      DbConnection.dbsqlite.close();
-    }
-    DbConnection.dbsqlite = undefined
+    this.dbsqlite.close();
   }
 }

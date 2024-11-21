@@ -59,10 +59,13 @@ class UserDb {
         return this.userkeysstr, this.uservaluestr;
     }
     userTableCreation(db) {
-        if (db == undefined)
-            throw Error("db undefined");
-        const sqltable = "CREATE TABLE IF NOT EXISTS User (uid TEXT PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL, firstname TEXT, lastname TEXT, createdAt DATE, updateAt DATE)";
-        db.serialize(() => db.run(sqltable));
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            if (db == undefined)
+                throw Error("db undefined");
+            const sqltable = "CREATE TABLE IF NOT EXISTS User (uid TEXT PRIMARY KEY, username TEXT NOT NULL, password TEXT NOT NULL, firstname TEXT, lastname TEXT, createdAt DATE, updateAt DATE)";
+            yield ((_a = this.db) === null || _a === void 0 ? void 0 : _a.serialize(() => db.run(sqltable)));
+        });
     }
     createUser(user) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -80,48 +83,52 @@ class UserDb {
             return Promise.resolve(`User ${user.username} created`);
         });
     }
-    getUser(uid = "") {
-        var _a;
-        var getusersql = "";
-        if (uid.length > 0) {
-            getusersql = `SELECT * FROM User WHERE uid = ?`;
-        }
-        else {
-            getusersql = `SELECT * FROM User`;
-        }
-        const res = [];
-        (_a = this.db) === null || _a === void 0 ? void 0 : _a.serialize(() => {
+    getUser() {
+        return __awaiter(this, arguments, void 0, function* (uid = "") {
             var _a;
-            return (_a = this.db) === null || _a === void 0 ? void 0 : _a.all(getusersql, [uid], (err, rows) => {
-                if (err) {
-                    console.error(err.message);
-                }
-                else {
-                    console.log(rows);
-                    // for (const row in rows) {
-                    //   res.push(User.fromJson(row));
-                    // }
-                }
-            });
+            var getusersql = "";
+            if (uid.length > 0) {
+                getusersql = `SELECT * FROM User WHERE uid = ?`;
+            }
+            else {
+                getusersql = `SELECT * FROM User`;
+            }
+            const res = [];
+            yield ((_a = this.db) === null || _a === void 0 ? void 0 : _a.serialize(() => {
+                var _a;
+                return (_a = this.db) === null || _a === void 0 ? void 0 : _a.all(getusersql, [uid], (err, rows) => {
+                    if (err) {
+                        console.error(err.message);
+                    }
+                    else {
+                        console.log(rows);
+                        // for (const row in rows) {
+                        //   res.push(User.fromJson(row));
+                        // }
+                    }
+                });
+            }));
+            return res;
         });
-        return res;
     }
     updateUser(uid, user) {
-        var _a;
-        const updatesql = `UPDATE User SET ${() => {
-            for (let i = 0; i < this.userkeys.length; i++) {
-                var res = this.userkeys[i] + " = ?";
-                if (i == this.userkeys.length - 1)
-                    res += ", ";
-            }
-        }} WHERE EXIST(SELECT 1 FROM User WHERE uid = ?)`;
-        (_a = this.db) === null || _a === void 0 ? void 0 : _a.serialize(() => {
+        return __awaiter(this, void 0, void 0, function* () {
             var _a;
-            return (_a = this.db) === null || _a === void 0 ? void 0 : _a.run(updatesql, [...this.uservalues, uid], (err) => {
-                if (err) {
-                    console.error(err.message);
+            const updatesql = `UPDATE User SET ${() => {
+                for (let i = 0; i < this.userkeys.length; i++) {
+                    var res = this.userkeys[i] + " = ?";
+                    if (i == this.userkeys.length - 1)
+                        res += ", ";
                 }
-            });
+            }} WHERE EXIST(SELECT 1 FROM User WHERE uid = ?)`;
+            yield ((_a = this.db) === null || _a === void 0 ? void 0 : _a.serialize(() => {
+                var _a;
+                return (_a = this.db) === null || _a === void 0 ? void 0 : _a.run(updatesql, [...this.uservalues, uid], (err) => {
+                    if (err) {
+                        console.error(err.message);
+                    }
+                });
+            }));
         });
     }
 }

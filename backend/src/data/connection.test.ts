@@ -4,10 +4,9 @@ import { UserDb } from "./UserDB";
 
 describe("connection test", () => {
   test("db static should not be null", async() => {
-    new DbConnection();
-    const userdb = new UserDb(DbConnection.dbsqlite);
+    const dbconn = new DbConnection();
+    const userdb = new UserDb(dbconn.dbsqlite);
     await userdb.initTestUser();
-    const getuser = await userdb.getUser()
-    console.log(getuser)
+    expect(await userdb.getUser()).not.toEqual(undefined)
   });
 });
