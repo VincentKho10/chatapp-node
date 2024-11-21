@@ -19,6 +19,8 @@ export class UserData {
     this.deleteOne = () => this.postAction(this.deleteOne);
   }
 
+  
+
   postAction(fn: any): any {
     fn;
     this.db.closeConnection();
