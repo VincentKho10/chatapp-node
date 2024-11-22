@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DbConnection = void 0;
 const sqlite3 = require("sqlite3").verbose();
+const user_1 = require("../class/user");
 class DbConnection {
     constructor() {
         this.dbsqlite = new sqlite3.Database("testingdb.db", sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
@@ -12,8 +13,7 @@ class DbConnection {
         this.userTableInit();
     }
     userTableInit() {
-        const utablefield = Object.getOwnPropertyNames(Object.getPrototypeOf(User()));
-        this.dbsqlite.prepare(`CREATE TABLE IF NOT EXISTS users(${utablefield.toString()});`);
+        this.dbsqlite.prepare(`CREATE TABLE IF NOT EXISTS users(${user_1.User.lsofParams()});`).all();
     }
     getConnection() {
         return this.dbsqlite;

@@ -1,5 +1,6 @@
 import { Database, sqlite3 } from "sqlite3";
 const sqlite3 = require("sqlite3").verbose();
+import { User } from "../class/user";
 
 export class DbConnection {
   private dbsqlite: Database;
@@ -18,12 +19,9 @@ export class DbConnection {
   }
   
   userTableInit() {
-    const utablefield = Object.getOwnPropertyNames(
-      Object.getPrototypeOf(User())
-    );
     this.dbsqlite.prepare(
-      `CREATE TABLE IF NOT EXISTS users(${utablefield.toString()});`
-    );
+      `CREATE TABLE IF NOT EXISTS users(${User.lsofParams()});`
+    ).all();
   }
 
   getConnection() {

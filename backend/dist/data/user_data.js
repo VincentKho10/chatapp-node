@@ -6,13 +6,17 @@ const connection_1 = require("./connection");
 const { faker } = require("@faker-js/faker");
 class UserData {
     constructor() {
-        this.res = [];
         this.db = new connection_1.DbConnection();
         this.getAll = () => this.postAction(this.getAll);
         this.getOne = () => this.postAction(this.getOne);
         this.createOne = () => this.postAction(this.createOne);
         this.updateOne = () => this.postAction(this.updateOne);
         this.deleteOne = () => this.postAction(this.deleteOne);
+    }
+    initiateDummyDB() {
+        for (let i = 0; i < 10; i++) {
+            this.createOne(new user_1.User(i.toString(), faker.internet.username(), faker.internet.password(), faker.person.firstName(), faker.person.lastName(), Date.now(), Date.now()).toJson());
+        }
     }
     postAction(fn) {
         fn;
@@ -44,3 +48,5 @@ class UserData {
     }
 }
 exports.UserData = UserData;
+const ud = new UserData();
+console.log(ud.getAll());

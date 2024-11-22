@@ -39,17 +39,11 @@ export class User {
     return Object.keys(User)
   }
 
-  static toJson(user: User): Record<string, any> {
-    return JSON.stringify(user)
+  toJson(): Record<string, any> {
+    return {...this}
   }
 
   public toString(): string {
     return this.uid;
   }
 }
-
-const user = new User("0",faker.internet.username(),faker.internet.password(),faker.person.firstName(),faker.person.lastName(),Date.now(),Date.now())
-const ujson = user.toJson()
-console.log(ujson)
-const userfj = User.fromJson(ujson)
-console.log(userfj)

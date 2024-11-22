@@ -6,11 +6,9 @@ import { Function } from "lodash";
 const { faker } = require("@faker-js/faker");
 
 export class UserData {
-  res: Array<any>;
   db: DbConnection;
 
   constructor() {
-    this.res = [];
     this.db = new DbConnection();
     this.getAll = () => this.postAction(this.getAll);
     this.getOne = () => this.postAction(this.getOne);
@@ -19,7 +17,11 @@ export class UserData {
     this.deleteOne = () => this.postAction(this.deleteOne);
   }
 
-  
+  initiateDummyDB(){
+    for(let i=0;i<10;i++){
+      this.createOne(new User(i.toString(), faker.internet.username(), faker.internet.password(), faker.person.firstName(), faker.person.lastName(), Date.now(), Date.now()).toJson())
+    }
+  }
 
   postAction(fn: any): any {
     fn;
@@ -55,3 +57,6 @@ export class UserData {
     return query.run(uid);
   }
 }
+
+const ud = new UserData()
+console.log(ud.getAll())
