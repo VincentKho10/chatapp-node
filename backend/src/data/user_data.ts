@@ -10,16 +10,16 @@ export class UserData {
 
   constructor() {
     this.db = new DbConnection();
-    this.getAll = () => this.postAction(this.getAll);
-    this.getOne = () => this.postAction(this.getOne);
-    this.createOne = () => this.postAction(this.createOne);
-    this.updateOne = () => this.postAction(this.updateOne);
-    this.deleteOne = () => this.postAction(this.deleteOne);
+    // this.getAll = () => this.postAction(this.getAll);
+    // this.getOne = () => this.postAction(this.getOne);
+    // this.createOne = () => this.postAction(this.createOne);
+    // this.updateOne = () => this.postAction(this.updateOne);
+    // this.deleteOne = () => this.postAction(this.deleteOne);
   }
 
   initiateDummyDB(){
     for(let i=0;i<10;i++){
-      this.createOne(new User(i.toString(), faker.internet.username(), faker.internet.password(), faker.person.firstName(), faker.person.lastName(), Date.now(), Date.now()).toJson())
+      this.createOne(new User(i.toString(), faker.internet.username(), faker.internet.password(), faker.person.firstName(), faker.person.lastName()).toJson())
     }
   }
 
@@ -28,27 +28,27 @@ export class UserData {
     this.db.closeConnection();
   }
 
-  getAll() {
-    const query = this.db.getConnection().prepare("SELECT * FROM users");
-    return query.all();
+  getAll(offset: number, limit: number) {
+    const query = this.db.getConnection().prepare("SELECT * FROM users LIMIT ?,?");
+    return query.all([offset,limit],(err, rows) => err ? console.error(err.message):rows);
   }
 
   getOne(uid: string) {
     const query = this.db
       .getConnection()
       .prepare("SELECT * FROM users WHERE uid = ?");
-    return query.run(uid);
+    return query.run(uid).all((err,rows)=>err?console.error(err.message):rows);
   }
 
   createOne(json: Record<string, any>): any {
     const user: User = User.fromJson(json)
-    const query = this.db.getConnection().prepare("INSERT INTO users (uid,username,password,firstname,lastname,createdAt,updateAt,deletedAt) VALUE(?,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,?)")
-    query.run(user.uid,user.username,user.password,user.firstname,user.lastname,user.deletedAt);
+    const query = this.db.getConnection().prepare("INSERT OR IGNORE INTO users (uid,username,password,firstname,lastname,createdAt,updatedAt,deletedAt) VALUES (?,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,NULL)")
+    query.run(user.uid,user.username,user.password,user.firstname,user.lastname);
   }
 
   updateOne(uid: string, changes: Record<string, any>) {
     const user: User = User.fromJson(changes)
-    const query = this.db.getConnection().prepare("UPDATE users SET username=?,password=?,firstname=?,lastname=?,updateAt=CURRENT_TIMESTAMP WHERE uid=?")
+    const query = this.db.getConnection().prepare("UPDATE users SET username=?,password=?,firstname=?,lastname=?,updatedAt=CURRENT_TIMESTAMP WHERE uid=?")
     return query.run(user.username,user.password,user.firstname,user.lastname,uid);
   }
 
@@ -59,4 +59,11 @@ export class UserData {
 }
 
 const ud = new UserData()
-console.log(ud.getAll())
+const nu = ud.getOne("1")
+ud.db.userTableInit()
+ud.initiateDummyDB()
+console.log(nu)
+// ud.getAll(2,2)
+// ud.createOne(nu.toJson())
+// ud.updateOne(nu.uid, {...nu.toJson(), "username": "changed" })
+// ud.deleteOne(nu.uid)

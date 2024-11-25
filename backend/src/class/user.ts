@@ -6,9 +6,9 @@ export class User {
   password: string;
   firstname: string;
   lastname: string;
-  createdAt: Number;
-  updatedAt: Number;
-  deletedAt: Number;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
 
   constructor(
     uid: string="",
@@ -16,9 +16,9 @@ export class User {
     password: string="",
     firstname: string="",
     lastname: string="",
-    createdAt: Number=0,
-    updatedAt: Number=0,
-    deletedAt: Number=0,
+    createdAt: string="",
+    updatedAt: string="",
+    deletedAt: string="",
   ) {
     this.uid = uid;
     this.username = username;
@@ -35,8 +35,15 @@ export class User {
     return (Object.assign(res, json) as unknown) as User
   }
 
-  static lsofParams(){
-    return Object.keys(User)
+  lsofParams(){
+    return Object.keys(this).map((v,i)=>{
+      if(typeof v == "string"){
+        return v+" TEXT"
+      }
+      else if(typeof v == "number"){
+        return v+" INT"
+      }
+    })
   }
 
   toJson(): Record<string, any> {

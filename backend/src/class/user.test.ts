@@ -8,4 +8,17 @@ describe("Testing User Class Behavior", () => {
     const userfrom = User.fromJson(user.toJson())
     expect(user).toEqual(userfrom);
   });
+  test("User lsofField should return list of its variables", () => {
+    const userfields = user.lsofParams();
+    expect(userfields).toEqual([
+      'uid',
+      'username',
+      'password',
+      'firstname',
+      'lastname',
+      'createdAt',
+      'updatedAt',
+      'deletedAt'
+    ])
+  });
 });

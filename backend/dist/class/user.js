@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 class User {
-    constructor(uid = "", username = "", password = "", firstname = "", lastname = "", createdAt = 0, updatedAt = 0, deletedAt = 0) {
+    constructor(uid = "", username = "", password = "", firstname = "", lastname = "", createdAt = "", updatedAt = "", deletedAt = "") {
         this.uid = uid;
         this.username = username;
         this.password = password;
@@ -16,8 +16,15 @@ class User {
         var res = new User();
         return Object.assign(res, json);
     }
-    static lsofParams() {
-        return Object.keys(User);
+    lsofParams() {
+        return Object.keys(this).map((v, i) => {
+            if (typeof v == "string") {
+                return v + " TEXT";
+            }
+            else if (typeof v == "number") {
+                return v + " INT";
+            }
+        });
     }
     toJson() {
         return Object.assign({}, this);

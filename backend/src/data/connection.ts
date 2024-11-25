@@ -15,13 +15,25 @@ export class DbConnection {
         }
       }
     );
-    this.userTableInit();
   }
   
   userTableInit() {
+    const lsofparams = new User().lsofParams().map((v,i)=>{
+      var res = v
+      if(i==0){
+        res += " PRIMARY KEY"
+      }
+      if(v!="deletedAt TEXT"){
+        res += " NOT"
+      }else{
+        return res + " NULL"
+      }
+      return res + " NULL, "
+    }).reduce((prev,curr)=>prev+=curr)
+    console.log(`CREATE TABLE IF NOT EXISTS users(${lsofparams});`)
     this.dbsqlite.prepare(
-      `CREATE TABLE IF NOT EXISTS users(${User.lsofParams()});`
-    ).all();
+      `CREATE TABLE IF NOT EXISTS users(${lsofparams});`
+    ).run((err)=>err?console.error(err?.message):"");
   }
 
   getConnection() {
