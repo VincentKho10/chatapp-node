@@ -28,9 +28,17 @@ export class UserData {
     this.db.closeConnection();
   }
 
-  getAll(offset: number, limit: number) {
+  getAll(offset: number, limit: number): any[] {
+    var res: any[] = []
     const query = this.db.getConnection().prepare("SELECT * FROM users LIMIT ?,?");
-    return query.all([offset,limit],(err, rows) => err ? console.error(err.message):rows);
+    query.all([offset,limit],(err, rows) => {
+      if(err){
+        console.error(err.message)
+      }else{
+        rows.map((v)=>res.push(User.fromJson(JSON.parse(String(v)))))
+      }
+    });
+    return res
   }
 
   getOne(uid: string) {
@@ -62,8 +70,8 @@ const ud = new UserData()
 const nu = ud.getOne("1")
 ud.db.userTableInit()
 ud.initiateDummyDB()
-console.log(nu)
-// ud.getAll(2,2)
+ud.getAll(2,2)
+// console.log(nu)
 // ud.createOne(nu.toJson())
 // ud.updateOne(nu.uid, {...nu.toJson(), "username": "changed" })
 // ud.deleteOne(nu.uid)
