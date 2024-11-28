@@ -30,10 +30,9 @@ export class DbConnection {
       }
       return res + " NULL, "
     }).reduce((prev,curr)=>prev+=curr)
-    console.log(`CREATE TABLE IF NOT EXISTS users(${lsofparams});`)
     this.dbsqlite.prepare(
       `CREATE TABLE IF NOT EXISTS users(${lsofparams});`
-    ).run((err)=>err?console.error(err?.message):"");
+    ).all((err,rows)=>err?console.error(err.message):console.log(rows));
   }
 
   getConnection() {

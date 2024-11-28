@@ -25,8 +25,7 @@ class DbConnection {
             }
             return res + " NULL, ";
         }).reduce((prev, curr) => prev += curr);
-        console.log(`CREATE TABLE IF NOT EXISTS users(${lsofparams});`);
-        this.dbsqlite.prepare(`CREATE TABLE IF NOT EXISTS users(${lsofparams});`).run((err) => err ? console.error(err === null || err === void 0 ? void 0 : err.message) : "");
+        this.dbsqlite.prepare(`CREATE TABLE IF NOT EXISTS users(${lsofparams});`).all((err, rows) => err ? console.error(err.message) : console.log(rows));
     }
     getConnection() {
         return this.dbsqlite;
