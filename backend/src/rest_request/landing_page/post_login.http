@@ -1,9 +1,9 @@
-POST http://localhost:8000/login
+POST http://localhost:8000/user/login
 content-type: application/json
 
 {
-    "username": "JohnDoe",
-    "password": "testingpass123"
+    "username": "changarea",
+    "password": "tlRKeZuwOb3DrIq"
 }
 
 ###

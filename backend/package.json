@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "tsc | jest ./dist",
-    "start": "nodemon ./src/index.js"
+    "start": "tsc | nodemon ./dist/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -21,8 +21,9 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
-    "typescript": "^5.6.3",
-    "ts-jest": "^29.2.5"
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.6.3"
   }
 }
