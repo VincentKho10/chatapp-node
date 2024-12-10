@@ -9,8 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserData = void 0;
+exports.User = exports.UserData = void 0;
 const user_1 = require("../class/user");
+Object.defineProperty(exports, "User", { enumerable: true, get: function () { return user_1.User; } });
 const connection_1 = require("./connection");
 const { faker } = require("@faker-js/faker");
 class UserData {
@@ -34,9 +35,8 @@ class UserData {
                     return reject(err.message);
                 }
                 else if (rows.length <= 0) {
-                    return resolve('login failed');
+                    return reject(Object.assign(Object.assign({}, this.fail_response), { message: 'invalid credentials' }));
                 }
-                console.log('fail');
                 return resolve(rows[0]['uid']);
             }));
         });
@@ -70,6 +70,7 @@ class UserData {
             const query = this.db
                 .getConnection()
                 .prepare("INSERT OR IGNORE INTO users (uid,username,password,firstname,lastname,createdAt,updatedAt,deletedAt) VALUES (?,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,NULL)");
+            console.log(user);
             return yield new Promise((resolve, reject) => {
                 query.run([user.uid, user.username, user.password, user.firstname, user.lastname], (err) => err
                     ? reject(Object.assign(Object.assign({}, this.fail_response), { message: err.message }))

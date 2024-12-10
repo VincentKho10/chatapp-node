@@ -1,3 +1,4 @@
-export default function errorHandler(err: Error){
-    console.error(err.message)
+export default function errorHandler(res: any, err: Record<any, any>){
+    res.json(err)
+    console.error("Error: "+err.message)
 }

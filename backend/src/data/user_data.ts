@@ -39,7 +39,7 @@ export class UserData {
         if (err) {
           return reject(err.message);
         } else if (rows.length <= 0){
-          return reject('invalid credentials')
+          return reject({...this.fail_response, message:'invalid credentials'})
         }
         return resolve((rows[0] as Record<any,any>)['uid']);
       })
@@ -78,6 +78,7 @@ export class UserData {
       .prepare(
         "INSERT OR IGNORE INTO users (uid,username,password,firstname,lastname,createdAt,updatedAt,deletedAt) VALUES (?,?,?,?,?,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,NULL)"
       );
+    console.log(user)
     return await new Promise((resolve, reject) => {
       query.run(
         [user.uid, user.username, user.password, user.firstname, user.lastname],
@@ -132,3 +133,5 @@ export class UserData {
     );
   }
 }
+export { User };
+
